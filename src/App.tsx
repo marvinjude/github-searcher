@@ -1,26 +1,60 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { createContext, useContext } from 'react'
+import styled from "styled-components";
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { ThemeProvider } from 'styled-components';
+import ResultsPage from './pages/ResultsPage';
+import Home from './pages/Home';
+
+import { themes } from "./themes";
+import { GlobalStyles } from './GlobalsStyles';
+import useLocalStorage from './hooks/useLocalStorage';
+
+import "./normalize.css";
+import "./App.css";
+
+type AppContextVales = {
+  isDarkMode?: string;
+  setIsDarkMode?: (value: boolean) => void;
+}
+
+export const AppContext = createContext<AppContextVales>({});
+
+export const useAppContext = () => useContext(AppContext);
+
+
+const AppWrapper = styled.div`
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: ${(props) => props.theme.backgroundColor};
+  font-family: "Manrope", sans-serif;
+  transition: all 0.2s linear;
+`;
+
 
 function App() {
+  const [isDarkMode, setIsDarkMode] = useLocalStorage("isDarkMode", true);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <AppContext.Provider
+      value={{
+        isDarkMode,
+        setIsDarkMode
+      }}>
+      <ThemeProvider theme={isDarkMode ? themes.dark : themes.light}>
+        <AppWrapper>
+          <Router>
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route path="/result" component={ResultsPage}></Route>
+            </Switch>
+          </Router>
+        </AppWrapper>
+        <GlobalStyles />
+      </ThemeProvider>
+    </AppContext.Provider>
+
+  )
 }
 
 export default App;
