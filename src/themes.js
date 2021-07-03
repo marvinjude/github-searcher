@@ -8,7 +8,7 @@ export const themes = {
   },
   light: {
     primary: "",
-    foregroundColor: "",
+    foregroundColor: "black",
     backgroundColor: "#fefefe",
     footerBackgroundColor: "rgb(212, 185, 235)",
     borderColor: "#d6d0d0",

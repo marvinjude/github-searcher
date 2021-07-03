@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 const StyledInput = styled.input`
   background: #c1b5cc38;
-  border: ${({ theme }) => theme.borderColor};
+  border: ${({ theme }) => `1px solid ${theme.borderColor}`};
   height: 2.8rem;
   padding: 1rem;
   border-radius: 0.2rem;
@@ -17,6 +17,8 @@ interface Props {
   className: string;
   placeholder: string;
   onChange: any;
+  type: any;
+  value: any;
 }
 
 const Input: FC<Props> = ({ className, ...props }) => {
@@ -24,3 +26,7 @@ const Input: FC<Props> = ({ className, ...props }) => {
 };
 
 export default Input;
+
+
+
+

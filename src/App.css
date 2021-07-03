@@ -14,9 +14,11 @@
   padding-top: 1.5rem;
   overflow: scroll;
   padding-bottom: 2rem;
+  width: 100%;
 }
 
 .main-area .main-area__inner {
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(7, 160px);
   grid-auto-flow: row;

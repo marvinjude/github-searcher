@@ -7,7 +7,7 @@ interface Props {
   type?: string;
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.a`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,6 +16,8 @@ const Wrapper = styled.div`
   height: 200px;
   width:160px;
   transition: .3s all ease;
+  text-decoration: none;
+
 
   &:hover{
     transform: translateY(.2rem);
@@ -31,7 +33,7 @@ const Wrapper = styled.div`
   .user-box__login {
     margin-top: 1rem;
     text-transform: capitalize;
-    color: ${({ theme }) => theme.foregroundColor};
+    color: ${({ theme }) => theme.foregroundColor} !important;
   }
 
   .user-box__user-type {
@@ -52,7 +54,7 @@ const Wrapper = styled.div`
 
 const UserBox: FC<Props> = ({ avatar_url, login, type, ...props }) => {
   return (
-    <Wrapper {...props}>
+    <Wrapper target='_blank' href={`https://github.com/${login}`} {...props}>
       <img className="user-box__avatar" alt={login} src={avatar_url} />
       <span className="user-box__login">{login}</span>
       <div className="user-box__user-type">
