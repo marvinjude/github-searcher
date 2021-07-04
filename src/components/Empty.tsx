@@ -10,15 +10,11 @@ const Wrapper = styled.div`
   color: ${({ theme }) => theme.foregroundColor};
   
   & h1 {
-    line-height: 0;
     margin-top: 2rem;
     font-size: 1.5rem;
     font-weight: 500;
   }
 
-  & p {
-    line-height: 0;
-  }
 `;
 
 type EmptyProps = {

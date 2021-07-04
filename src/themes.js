@@ -1,21 +1,23 @@
 export const themes = {
   dark: {
-    primary: "",
+    primary: "#892cdc;",
+    primaryForegroundColor: "#ffffff",
     foregroundColor: "white",
     backgroundColor: "#000000",
     footerBackgroundColor: "#1f0735",
-    borderColor: "#1f0735",
+    borderColor: "#80808026",
+    headerBg: "#0a050e",
   },
   light: {
-    primary: "",
-    foregroundColor: "black",
+    primary: "#892cdc;",
+    primaryForegroundColor: "#ffffff",
+    foregroundColor: "#010409",
     backgroundColor: "#fefefe",
-    footerBackgroundColor: "rgb(212, 185, 235)",
-    borderColor: "#d6d0d0",
+    footerBackgroundColor: "#1f0735",
+    borderColor: "#80808026",
+    headerBg: "whitesmoke",
   },
 };
-
-//--------------------------------------------------
 
 const size = {
   mobileS: "320px",

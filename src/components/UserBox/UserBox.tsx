@@ -31,7 +31,7 @@ const Wrapper = styled.a`
   }
 
   .user-box__login {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     text-transform: capitalize;
     color: ${({ theme }) => theme.foregroundColor} !important;
   }
@@ -41,7 +41,6 @@ const Wrapper = styled.a`
     width: 2rem;
     background: #bd6ff18c;
     position: absolute;
-
     border-radius: 50%;
     bottom: 50px;
     right: 15px;

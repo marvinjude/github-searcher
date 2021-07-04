@@ -9,7 +9,6 @@ import { themes } from "./themes";
 import { GlobalStyles } from './GlobalsStyles';
 import useLocalStorage from './hooks/useLocalStorage';
 
-import "./normalize.css";
 import "./App.css";
 
 type AppContextVales = {
@@ -27,6 +26,7 @@ const AppWrapper = styled.div`
   display: flex;
   flex-direction: column;
   background: ${(props) => props.theme.backgroundColor};
+  color: ${(props) => props.theme.foregroundColor};
   font-family: "Manrope", sans-serif;
   transition: all 0.2s linear;
 `;
