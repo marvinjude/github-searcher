@@ -9,6 +9,8 @@ const StyledInput = styled.input`
   border: none;
   height: 2.8rem;
   padding: 1rem;
+  min-width: 0;
+  border-radius:0;
 
   color: ${({ theme }) => theme.foregroundColor};
 

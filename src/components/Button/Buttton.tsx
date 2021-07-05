@@ -39,6 +39,7 @@ const StyledButton = styled.button<StyledButtonProps>`
   cursor: pointer;
   font-weight: 500;
   text-decoration: none !important;
+  min-width: ${({ small }) => (small ? "5rem" : "7rem")};
 
   svg {
     margin-right: 0.2rem;

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, memo } from "react";
 import styled, { keyframes } from "styled-components";
 import { Link, useHistory } from "react-router-dom";
 
@@ -18,7 +18,6 @@ import File from "../Icons/File";
 import api from "../service/api";
 import { device } from "../themes";
 import { PER_PAGE } from "../constants";
-
 
 /** Styles
  * ================================== */
@@ -64,7 +63,7 @@ const StyledPaginationItem = styled.button<StyledPaginationItemProps>`
 
 const StyledHeaderArea = styled.div`
   color: ${(props) => props.theme.foregroundColor};
-  background-color: inherit;
+  background-color: ${(props) => props.theme.headerBg};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -76,6 +75,7 @@ const StyledHeaderArea = styled.div`
   position: sticky;
   top: 0;
   z-index: 10;
+  transition: revert;
 
   .left {
     font-size: 1rem;
@@ -88,12 +88,13 @@ const StyledHeaderArea = styled.div`
 const StyledHeader = styled.div`
   display: flex;
   align-items: center;
-  padding: 1rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
   background-color: ${(props) => props.theme.headerBg};
 
   @media ${device.laptop} {
+    padding: 1rem;
     padding-left: 3rem;
     padding-right: 3rem;
   }
@@ -114,29 +115,40 @@ const StyledHeader = styled.div`
 
 const StyledLayout = styled.div`
   flex: 1 1 0;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 1rem;
   display: flex;
   flex-direction: column;
 
   @media ${device.laptop} {
     padding-left: 4rem;
     padding-right: 4rem;
+    padding-top: 1rem;
   }
 
   .main-area {
     flex: 1 1 0;
-    overflow: scroll;
     padding-bottom: 2rem;
     width: 100%;
     .main-area__inner {
+      padding: 1rem;
       width: 100%;
-      display: flex;
-      flex-wrap: wrap;
-      grid-template-columns: repeat(7, 160px);
+      overflow: scroll;
+      gap: 1rem;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(100px, 1fr));
+
       grid-auto-flow: row;
-      gap: 0.3rem;
+
+      @media ${device.mobileM} {
+        grid-template-columns: repeat(3, minmax(100px, 1fr));
+      }
+
+      @media ${device.tablet} {
+        grid-template-columns: repeat(5, minmax(100px, 1fr));
+      }
+
+      @media ${device.laptop} {
+        grid-template-columns: repeat(8, minmax(100px, 1fr));
+      }
     }
   }
 `;
@@ -218,7 +230,6 @@ function ResultsPage() {
 
   const handleSearch = useCallback(
     async (searchTerm: string) => {
-
       history.push({
         pathname: "/result",
         search: `?q=${searchTerm}`,
@@ -270,9 +281,8 @@ function ResultsPage() {
   //Fetch on new render
   useEffect(() => {
     let mounted = true;
-    const searhTermsFromURL = new URLSearchParams(history.location.search).get(
-      "q"
-    ) || "";
+    const searhTermsFromURL =
+      new URLSearchParams(history.location.search).get("q") || "";
 
     // put query in ref
     lastSearchTerm.current = searhTermsFromURL;
@@ -285,8 +295,7 @@ function ResultsPage() {
 
     return () => {
       mounted = false;
-    }
-
+    };
   }, [history, handleSearch]);
 
   //==================================
@@ -302,7 +311,7 @@ function ResultsPage() {
           onSubmit={(value) => handleSearch(value)}
           loading={loading}
         />
-        <div className="header__right" >
+        <div className="header__right">
           <ToggleMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
         </div>
       </StyledHeader>
@@ -313,7 +322,8 @@ function ResultsPage() {
               <StyledHeaderArea>
                 <div className="left">
                   <File />
-                  {formatNumber(result.total_count)} {`Result${result.total_count > 1 && 's'}`} found
+                  {formatNumber(result.total_count)}{" "}
+                  {`Result${result.total_count > 1 && "s"}`} found
                 </div>
                 <div>
                   <Select
@@ -338,8 +348,9 @@ function ResultsPage() {
           {result.items.length === 0 && !loading && !error && (
             <Empty
               title="I can't find anything"
-              subTitle={`no result found ${lastSearchTerm.current && "for “"}${lastSearchTerm.current
-                }${lastSearchTerm.current && "”"}`}
+              subTitle={`no result found ${lastSearchTerm.current && "for “"}${
+                lastSearchTerm.current
+              }${lastSearchTerm.current && "”"}`}
             />
           )}
 
@@ -360,21 +371,24 @@ function ResultsPage() {
           >
             {"<<"}
           </StyledPaginationItem>
-          {paginationListGenerator(
-            currentPage,
-            result.total_count
-          ).map((pageNumber) => (
-            <StyledPaginationItem
-              key={pageNumber}
-              selected={currentPage === pageNumber}
-              onClick={() => fetchPage(pageNumber)}
-            >
-              {pageNumber}
-            </StyledPaginationItem>
-          ))}
+          {paginationListGenerator(currentPage, result.total_count).map(
+            (pageNumber) => (
+              <StyledPaginationItem
+                key={pageNumber}
+                selected={currentPage === pageNumber}
+                onClick={() => fetchPage(pageNumber)}
+              >
+                {pageNumber}
+              </StyledPaginationItem>
+            )
+          )}
           <StyledPaginationItem
             selected={false}
-            onClick={() => fetchPage((currentPage + 1) % Math.ceil(result.total_count / PER_PAGE))}
+            onClick={() =>
+              fetchPage(
+                (currentPage + 1) % Math.ceil(result.total_count / PER_PAGE)
+              )
+            }
             disabled={currentPage === Math.ceil(result.total_count / PER_PAGE)}
           >
             {">>"}
@@ -385,4 +399,4 @@ function ResultsPage() {
   );
 }
 
-export default ResultsPage;
+export default memo(ResultsPage);

@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react'
+import { createContext, useContext, useEffect } from 'react'
 import styled from "styled-components";
 import { Route, Switch } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components';
@@ -21,7 +21,7 @@ export const useAppContext = () => useContext(AppContext);
 
 
 const AppWrapper = styled.div`
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   background: ${(props) => props.theme.backgroundColor};
@@ -33,6 +33,24 @@ const AppWrapper = styled.div`
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useLocalStorage("isDarkMode", true);
+
+  useEffect(() => {
+    const appHeight = () => {
+      const innerHeight = window.innerHeight;
+      const doc = document.documentElement;
+
+      console.log(innerHeight)
+
+      doc.style.setProperty('--app-height', `${innerHeight}px`)
+    }
+    window.addEventListener('resize', appHeight)
+
+    appHeight()
+
+    return () => {
+      window.removeEventListener('resize', appHeight)
+    }
+  }, [])
 
   return (
     <AppContext.Provider

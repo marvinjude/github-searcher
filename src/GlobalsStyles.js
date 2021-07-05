@@ -5,6 +5,17 @@ export const GlobalStyles = createGlobalStyle`
     background: ${(props) => props.theme.backgroundColor};
   }
 
+  :root {
+    --app-height: 100%;
+  }
+
+  html,
+  body {
+    width: 100vw;
+    height: 100vh;
+    height: var(--app-height);
+  }
+
   html {
     line-height: 1.5;
     -webkit-text-size-adjust: 100%;
@@ -16,8 +27,10 @@ export const GlobalStyles = createGlobalStyle`
   }
   body {
     position: relative;
-    min-height: 100%;
     font-feature-settings: 'kern';
+  }
+  #root{
+    height:100%;
   }
   *,
   *::before,
@@ -131,8 +144,9 @@ export const GlobalStyles = createGlobalStyle`
     -moz-appearance: textfield;
   }
   [type="search"] {
-    -webkit-appearance: textfield;
+    -webkit-appearance: none;
     outline-offset: -2px;
+
   }
   [type="search"]::-webkit-search-decoration {
     -webkit-appearance: none !important;

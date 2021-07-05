@@ -5,12 +5,15 @@ import { Link, useHistory } from "react-router-dom";
 import Search from "../components/Search/Search";
 
 const Wrapper = styled.div`
-  height: 100vh;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   margin-top: -2rem;
+  overflow: hidden;
+  height: -webkit-fill-available;
+
 
   .top {
     display: flex;
@@ -26,9 +29,14 @@ const Wrapper = styled.div`
 
   .button-list {
     display: flex;
-    gap: 1rem;
+    /* gap: 1rem; */
     align-items: center;
     justify-content: center;
+
+    button{
+      margin-left:1rem;
+      margin-left:1rem;
+    }
   }
   .footer {
     margin-top: 2rem;
