@@ -59,7 +59,7 @@ function Home() {
       <div className="footer">
         <div className="button-list">
           {suggestedSearchTerms.map(searchItem => (
-            <Link to={`/result?q=${searchItem}`}>
+            <Link key={searchItem} to={`/result?q=${searchItem}`}>
               <Button rounded small>
                 {searchItem}
               </Button>

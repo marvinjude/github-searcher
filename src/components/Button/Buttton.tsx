@@ -1,9 +1,9 @@
-import React, { FC} from "react";
+import React, { FC } from "react";
 import CircularSpinner from "../Spinners/CircularSpinner";
 import styled from "styled-components";
 import { device } from "../../themes";
 
-interface Props  {
+interface Props {
   loading?: boolean;
   disabled?: boolean;
   primary?: boolean;
@@ -66,7 +66,7 @@ const StyledButton = styled.button<StyledButtonProps>`
 
 const Button: FC<Props> = ({ children, loading, ...props }) => {
   return (
-    <StyledButton {...props}>
+    <StyledButton role='button' {...props}>
       {loading ? <CircularSpinner /> : children}
     </StyledButton>
   );
@@ -75,7 +75,7 @@ const Button: FC<Props> = ({ children, loading, ...props }) => {
 
 export const IconButton: FC = ({ children, ...props }) => {
   return (
-    <IconButtonWrapper {...props}>
+    <IconButtonWrapper role='button' {...props}>
       {children}
     </IconButtonWrapper>
   );
