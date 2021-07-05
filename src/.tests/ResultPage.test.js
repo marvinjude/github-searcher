@@ -4,7 +4,6 @@ import {
     screen,
     act,
     cleanup,
-    findByTestId,
   } from "@testing-library/react";
   import { Router } from "react-router-dom";
   import { createMemoryHistory } from "history";
