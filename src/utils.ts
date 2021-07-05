@@ -1,5 +1,23 @@
-export function pickXPages(currentPage: number, lastPage: number) {
+
+import { PER_PAGE } from './constants';
+
+
+export function paginationListGenerator(currentPage: number, totalCount: number) {
+
+  if (Math.ceil(totalCount / PER_PAGE) === 1) {
+    return [1]
+  }
+
+  if (Math.ceil(totalCount / PER_PAGE) === 2) {
+    return [1, 2]
+  }
+
+  if (Math.ceil(totalCount / PER_PAGE) === 3) {
+    return [1, 2, 3]
+  }
+
   const pages = [currentPage, currentPage + 1, currentPage + 2];
+  const lastPage =  Math.ceil(totalCount / PER_PAGE)
 
   return pages.includes(lastPage)
     ? [currentPage, currentPage + 1, currentPage + 2]

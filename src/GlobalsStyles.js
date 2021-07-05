@@ -235,4 +235,12 @@ export const GlobalStyles = createGlobalStyle`
   select::-ms-expand {
     display: none;
   }
+
+  *:focus {
+    outline: none;
+  }
+
+  *:focus-visible {
+    box-shadow: 0 0 0 3px rgba(128, 93, 249, 0.3);
+  }
 `;

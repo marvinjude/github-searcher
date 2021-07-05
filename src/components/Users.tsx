@@ -30,12 +30,12 @@ type UsersProps = {
 const Users: FC<UsersProps> = ({ items }) => {
   return (
     <>
-      {items.map(({ login, avatar_url, type }) => (
+      {items.map(({ login, avatar_url, type, id }) => (
         <UserBox
+          key={id}
           avatar_url={avatar_url}
           login={login}
           type={type}
-          key={avatar_url}
         />
       ))}
     </>

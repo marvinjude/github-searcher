@@ -85,6 +85,7 @@ function Select({ items, onChange, placeholder, ...delegated }: SelectProps) {
       <div className="input" onClick={() => setOpen((o) => !o)}>
         {value || placeholder}
         <svg
+          focusable='false'
           width="6"
           height="4"
           tabIndex={-1}
@@ -121,7 +122,7 @@ function Select({ items, onChange, placeholder, ...delegated }: SelectProps) {
             exit={{ opacity: 0, y: -20, scaleY: 0.7 }}
           >
             {items.map((item: any) => (
-              <div onClick={() => onSelect(item)} className="select__item">
+              <div key={item} onClick={() => onSelect(item)} className="select__item">
                 {item}
               </div>
             ))}

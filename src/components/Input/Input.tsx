@@ -1,22 +1,32 @@
 import React, { FC } from 'react';
 import styled from 'styled-components'
+import { device } from '../../themes';
 
+/** Styles
+ * ================================== */
 const StyledInput = styled.input`
   background: #c1b5cc38;
   border: none;
   height: 2.8rem;
   padding: 1rem;
-  min-width: 20rem;
+
   color: ${({ theme }) => theme.foregroundColor};
+
+  @media ${device.laptop}{
+    min-width: 20rem;
+  }
   
 `
+//==================================
+
 
 interface Props {
   className: string;
   placeholder: string;
   onChange: any;
   type: any;
-  value: any;
+  value?: any;
+  defaultValue?: any
 }
 
 const Input: FC<Props> = ({ className, ...props }) => {

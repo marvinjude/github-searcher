@@ -8,23 +8,27 @@ import Logo from "../components/Logo";
 import Select from "../components/Select/Select";
 import Search from "../components/Search/Search";
 import Empty from "../components/Empty";
+import ErrorPlaceholder from "../components/ErrorPlaceholder";
 
 import useDidUpdateEffect from "../hooks/useDidUpdateEffect";
 
 import { useAppContext } from "../App";
-import { PER_PAGE } from "../constants";
-import { pickXPages, formatNumber, dataSorter } from "../utils";
+import { paginationListGenerator, formatNumber, dataSorter } from "../utils";
 import File from "../Icons/File";
 import fetchUsers from "../service/user.service";
+import { device } from "../themes";
+import { PER_PAGE } from "../constants";
 
+/** Styles
+ * ================================== */
 
 const rotate = keyframes`
-  from {
-    transform: translateY(20px);
-  }
-  to {
-    transform: translateY(0);
-  }
+ from {
+   transform: translateY(20px);
+ }
+ to {
+   transform: translateY(0);
+ }
 `;
 
 const StyledFooter = styled.footer`
@@ -35,6 +39,26 @@ const StyledFooter = styled.footer`
   align-items: center;
   justify-content: center;
   animation: ${rotate} 0.3s linear;
+`;
+
+const StyledPaginationItem = styled.button<StyledPaginationItemProps>`
+  height: 2.8rem;
+  width: 2.8rem;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+  color: white;
+  background-color: ${({ selected, theme }) =>
+    selected ? theme.primary : `transparent`};
+  font-weight: ${({ selected }) => (selected ? "500" : `normal`)};
+  border: 1px solid #892cdc;
+  transition: 0.2s all;
+
+  &:hover {
+    background: #892cdc;
+    transform: scale(0.9);
+  }
 `;
 
 const StyledHeaderArea = styled.div`
@@ -64,9 +88,14 @@ const StyledHeader = styled.div`
   display: flex;
   align-items: center;
   padding: 1rem;
-  padding-left: 3rem;
-  padding-right: 3rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   background-color: ${(props) => props.theme.headerBg};
+
+  @media ${device.laptop} {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
 
   .header__left {
     display: flex;
@@ -75,32 +104,72 @@ const StyledHeader = styled.div`
   .header__right {
     margin-left: auto;
     color: white;
+    padding-left: 0.5rem;
   }
   .mr {
     margin-right: 1rem;
   }
 `;
-//Styled components
 
+const StyledLayout = styled.div`
+  flex: 1 1 0;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+
+  @media ${device.laptop} {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+
+  .main-area {
+    flex: 1 1 0;
+    overflow: scroll;
+    padding-bottom: 2rem;
+    width: 100%;
+    .main-area__inner {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      grid-template-columns: repeat(7, 160px);
+      grid-auto-flow: row;
+      gap: 0.3rem;
+    }
+  }
+`;
+//==================================
+
+/** Type defs
+ * ================================== */
 enum sortTypes {
   followers = "followers",
   repositories = "repositories",
   joined = "joined",
 }
 
-interface resultProps {
-  items: UserType[]
-  total_count: number
+interface StyledPaginationItemProps {
+  selected: boolean;
 }
+
+interface resultProps {
+  items: UserType[];
+  total_count: number;
+}
+//==================================
 
 function ResultsPage() {
   const lastSearchTerm = useRef("");
 
-  const [result, setResult] = useState<resultProps>({ items: [], total_count: 0 });
+  const [result, setResult] = useState<resultProps>({
+    items: [],
+    total_count: 0,
+  });
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
-  const [sortType, setSortType] = useState<sortTypes>(sortTypes.repositories);
+  const [sortType, setSortType] = useState<sortTypes>(sortTypes.followers);
 
   const { isDarkMode, setIsDarkMode } = useAppContext();
   const history = useHistory();
@@ -125,6 +194,7 @@ function ResultsPage() {
           setResult(dataSorter(data));
         }
       } catch (e) {
+        setLoading(false);
         setError(e.message);
       }
     },
@@ -176,14 +246,16 @@ function ResultsPage() {
           setResult(dataSorter(data));
         }
       } catch (e) {
+        setLoading(false);
         setError(e.message);
       }
     },
     [sortType, history]
   );
 
-  //------------------------Effects----------------------------------
-  //asign page fetcher for arrow key
+  /** Effects
+   * ================================== */
+
   useEffect(() => {
     window.addEventListener("keyup", onKeyUp);
     return () => window.removeEventListener("keyup", onKeyUp);
@@ -201,10 +273,15 @@ function ResultsPage() {
     );
 
     if (searhTermsFromURL) {
+      // put query in ref
+      lastSearchTerm.current = searhTermsFromURL;
+
+      //should cause rerender so we're sure to have `lastSearchTerm.current` rendered
       handleSearch(searhTermsFromURL);
     }
   }, [history, handleSearch]);
-  //------------------------Effects----------------------------------
+
+  //==================================
 
   return (
     <>
@@ -221,18 +298,18 @@ function ResultsPage() {
           <ToggleMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
         </div>
       </StyledHeader>
-      <div className="top-area">
+      <StyledLayout>
         <main className="main-area">
           {result.items.length > 0 && (
             <>
               <StyledHeaderArea>
                 <div className="left">
                   <File />
-                  {formatNumber(result.total_count)} Results found
+                  {formatNumber(result.total_count)} {`Result${result.total_count > 1 && 's'}`} found
                 </div>
                 <div>
                   <Select
-                    placeholder={sortTypes.joined}
+                    placeholder={sortTypes.followers}
                     items={[
                       sortTypes.followers,
                       sortTypes.repositories,
@@ -250,42 +327,50 @@ function ResultsPage() {
             </>
           )}
 
-          {result.items.length === 0 && !loading && (
+          {result.items.length === 0 && !loading && !error && (
             <Empty
               title="I can't find anything"
               subTitle={`no result found ${lastSearchTerm.current && "for “"}${lastSearchTerm.current
                 }${lastSearchTerm.current && "”"}`}
             />
           )}
+
+          {error && result.items.length === 0 && (
+            <ErrorPlaceholder
+              title="An Error Occured"
+              subTitle={`Please run your search again`}
+            />
+          )}
         </main>
-      </div>
+      </StyledLayout>
       {result.items.length > 0 && (
         <StyledFooter>
-          <button
+          <StyledPaginationItem
+            selected={false}
             onClick={() => fetchPage(Math.max(1, currentPage - 1))}
-            className="pagination-item"
             disabled={currentPage === 1}
           >
             {"<<"}
-          </button>
-          {pickXPages(
+          </StyledPaginationItem>
+          {paginationListGenerator(
             currentPage,
-            result.total_count && Math.ceil(result.total_count / PER_PAGE)
+            result.total_count
           ).map((pageNumber) => (
-            <button
+            <StyledPaginationItem
+              key={pageNumber}
+              selected={currentPage === pageNumber}
               onClick={() => fetchPage(pageNumber)}
-              className={`pagination-item ${currentPage === pageNumber && "pagination-item--selected"
-                }`}
             >
               {pageNumber}
-            </button>
+            </StyledPaginationItem>
           ))}
-          <button
-            onClick={() => fetchPage(currentPage + 1)}
-            className="pagination-item"
+          <StyledPaginationItem
+            selected={false}
+            onClick={() => fetchPage((currentPage + 1) % Math.ceil(result.total_count / PER_PAGE))}
+            disabled={currentPage === Math.ceil(result.total_count / PER_PAGE)}
           >
             {">>"}
-          </button>
+          </StyledPaginationItem>
         </StyledFooter>
       )}
     </>

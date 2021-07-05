@@ -9,7 +9,6 @@ import { themes } from "./themes";
 import { GlobalStyles } from './GlobalsStyles';
 import useLocalStorage from './hooks/useLocalStorage';
 
-import "./App.css";
 
 type AppContextVales = {
   isDarkMode?: string;

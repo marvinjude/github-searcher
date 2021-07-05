@@ -40,6 +40,7 @@ const Wrapper = styled.div`
 
 function Home() {
   const history = useHistory();
+  const suggestedSearchTerms: string[] = ['Facebook', 'Google', 'Amazon']
 
   const handleClick = (value: string) => {
     history.push({
@@ -57,21 +58,13 @@ function Home() {
       </div>
       <div className="footer">
         <div className="button-list">
-          <Link to="/result?q=facebook">
-            <Button rounded small>
-              Facebook
-            </Button>
-          </Link>
-          <Link to="/result?q=Scalio">
-            <Button rounded small>
-              Scalio
-            </Button>
-          </Link>
-          <Link to="/result?q=Jude">
-            <Button rounded small>
-              Jude
-            </Button>
-          </Link>
+          {suggestedSearchTerms.map(searchItem => (
+            <Link to={`/result?q=${searchItem}`}>
+              <Button rounded small>
+                {searchItem}
+              </Button>
+            </Link>
+          ))}
         </div>
       </div>
     </Wrapper>
