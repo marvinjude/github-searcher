@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 import styled from "styled-components";
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components';
 import ResultsPage from './pages/ResultsPage';
 import Home from './pages/Home';
@@ -42,12 +42,10 @@ function App() {
       }}>
       <ThemeProvider theme={isDarkMode ? themes.dark : themes.light}>
         <AppWrapper>
-          <Router>
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <Route path="/result" component={ResultsPage}></Route>
-            </Switch>
-          </Router>
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/result" component={ResultsPage}></Route>
+          </Switch>
         </AppWrapper>
         <GlobalStyles />
       </ThemeProvider>

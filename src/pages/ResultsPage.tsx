@@ -15,9 +15,10 @@ import useDidUpdateEffect from "../hooks/useDidUpdateEffect";
 import { useAppContext } from "../App";
 import { paginationListGenerator, formatNumber, dataSorter } from "../utils";
 import File from "../Icons/File";
-import fetchUsers from "../service/user.service";
+import api from "../service/api";
 import { device } from "../themes";
 import { PER_PAGE } from "../constants";
+
 
 /** Styles
  * ================================== */
@@ -179,7 +180,7 @@ function ResultsPage() {
       setCurrentPage(page);
 
       try {
-        const data = await fetchUsers({
+        const { data } = await api.fetchUsers({
           sort: sortType,
           q: lastSearchTerm.current,
           page,
@@ -195,7 +196,7 @@ function ResultsPage() {
         }
       } catch (e) {
         setLoading(false);
-        setError(e.message);
+        setError(e.response.data.message);
       }
     },
     [sortType]
@@ -217,7 +218,6 @@ function ResultsPage() {
 
   const handleSearch = useCallback(
     async (searchTerm: string) => {
-      if (searchTerm.trim() === "") return;
 
       history.push({
         pathname: "/result",
@@ -229,7 +229,7 @@ function ResultsPage() {
       setLoading(true);
 
       try {
-        const data = await fetchUsers({
+        const { data } = await api.fetchUsers({
           sort: sortType,
           q: searchTerm,
           page: 1,
@@ -247,7 +247,7 @@ function ResultsPage() {
         }
       } catch (e) {
         setLoading(false);
-        setError(e.message);
+        setError(e.response.data.message);
       }
     },
     [sortType, history]
@@ -258,6 +258,7 @@ function ResultsPage() {
 
   useEffect(() => {
     window.addEventListener("keyup", onKeyUp);
+
     return () => window.removeEventListener("keyup", onKeyUp);
   }, [onKeyUp]);
 
@@ -266,19 +267,26 @@ function ResultsPage() {
     handleSearch(lastSearchTerm.current);
   }, [sortType]);
 
-  //Fetch on new render and when
+  //Fetch on new render
   useEffect(() => {
+    let mounted = true;
     const searhTermsFromURL = new URLSearchParams(history.location.search).get(
       "q"
-    );
+    ) || "";
 
-    if (searhTermsFromURL) {
-      // put query in ref
-      lastSearchTerm.current = searhTermsFromURL;
+    // put query in ref
+    lastSearchTerm.current = searhTermsFromURL;
 
-      //should cause rerender so we're sure to have `lastSearchTerm.current` rendered
+    //should cause rerender so we're sure to have `lastSearchTerm.current` rendered
+
+    if (mounted) {
       handleSearch(searhTermsFromURL);
     }
+
+    return () => {
+      mounted = false;
+    }
+
   }, [history, handleSearch]);
 
   //==================================
@@ -294,7 +302,7 @@ function ResultsPage() {
           onSubmit={(value) => handleSearch(value)}
           loading={loading}
         />
-        <div className="header__right">
+        <div className="header__right" >
           <ToggleMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
         </div>
       </StyledHeader>
@@ -321,7 +329,7 @@ function ResultsPage() {
                   />
                 </div>
               </StyledHeaderArea>
-              <div className="main-area__inner">
+              <div className="main-area__inner" data-testid="user-list">
                 <Users items={result.items} />
               </div>
             </>

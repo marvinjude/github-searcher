@@ -23,5 +23,5 @@
   },
   "include": [
     "src"
-, "src/.tests/App2.test.js", "src/.tests/App.test.js"  ]
+, "src/.tests/Home2.test.js", "src/.tests/Home.test.js"  ]
 }

@@ -1,8 +1,13 @@
 import { fireEvent, render } from "@testing-library/react";
+import { BrowserRouter as Router } from "react-router-dom";
 import App from "../App";
 
-test("Submit button click leads to new route with query passed", async () => {
-  const { getByText, getByPlaceholderText } = render(<App />);
+test("Clicking the submit button leads to new route with query passed", async () => {
+  const { getByText, getByPlaceholderText } = render(
+    <Router>
+      <App />
+    </Router>
+  );
 
   const SubmitButton = getByText(/Search/i, { selector: "button" });
   const input = getByPlaceholderText("Search here");

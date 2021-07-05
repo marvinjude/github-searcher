@@ -1,15 +1,24 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, cleanup } from "@testing-library/react";
+import { BrowserRouter as Router } from "react-router-dom";
 import App from "../App";
 
 test("Renders `Search Across Github`", () => {
-  render(<App />);
+  render(
+    <Router>
+      <App />
+    </Router>
+  );
   const h1Element = screen.getByText(/Search Across Github/i);
   expect(h1Element).toBeInTheDocument();
 });
 
-
 test("Link Clicks Lead to new route with query passed", async () => {
-  render(<App />);
+  render(
+    <Router>
+      <App />
+    </Router>
+  );
+
   const h1Element = screen.getByText(/Search Across Github/i);
   expect(h1Element).toBeInTheDocument();
 
@@ -21,5 +30,5 @@ test("Link Clicks Lead to new route with query passed", async () => {
 
   expect(hasNavigatedToNewWindow).toBe(true);
 
-  window.history.back();
+  cleanup();
 });
