@@ -63,7 +63,7 @@ const StyledPaginationItem = styled.button<StyledPaginationItemProps>`
 
 const StyledHeaderArea = styled.div`
   color: ${(props) => props.theme.foregroundColor};
-  background-color: ${(props) => props.theme.headerBg};
+  background-color: ${(props) => props.theme.backgroundColor};
   display: flex;
   justify-content: space-between;
   align-items: center;

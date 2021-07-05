@@ -27,7 +27,6 @@ const AppWrapper = styled.div`
   background: ${(props) => props.theme.backgroundColor};
   color: ${(props) => props.theme.foregroundColor};
   font-family: "Manrope", sans-serif;
-  transition: all 0.2s linear;
 `;
 
 
