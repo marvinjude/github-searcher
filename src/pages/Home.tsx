@@ -41,7 +41,8 @@ const Wrapper = styled.div`
   .footer {
     margin-top: 2rem;
     .label {
-      line-height: 3;
+      margin-bottom: 0.5rem;
+      margin-left:1rem
     }
   }
 `;
@@ -65,6 +66,7 @@ function Home() {
         <Search onSubmit={(value) => handleClick(value)} loading={false} />
       </div>
       <div className="footer">
+        <div className='label'>Suggested search:</div>
         <div className="button-list">
           {suggestedSearchTerms.map(searchItem => (
             <Link key={searchItem} to={`/result?q=${searchItem}`}>
