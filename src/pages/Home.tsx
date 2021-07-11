@@ -29,13 +29,12 @@ const Wrapper = styled.div`
 
   .button-list {
     display: flex;
-    /* gap: 1rem; */
     align-items: center;
     justify-content: center;
 
-    button{
-      margin-left:1rem;
-      margin-left:1rem;
+    & > *{
+      margin-left:0.25rem;
+      margin-right:0.25rem;
     }
   }
   .footer {
@@ -69,11 +68,15 @@ function Home() {
         <div className='label'>Suggested search:</div>
         <div className="button-list">
           {suggestedSearchTerms.map(searchItem => (
-            <Link key={searchItem} to={`/result?q=${searchItem}`}>
-              <Button rounded small>
-                {searchItem}
-              </Button>
-            </Link>
+            <Button
+              rounded={true}
+              small
+              as={Link}
+              key={searchItem}
+              to={`/result?q=${searchItem}`}
+            >
+              {searchItem}
+            </Button>
           ))}
         </div>
       </div>

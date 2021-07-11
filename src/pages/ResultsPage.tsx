@@ -6,6 +6,7 @@ import ToggleMode from "../components/ToggleMode/ToggleMode";
 import Users, { UserType } from "../components/Users";
 import Logo from "../components/Logo";
 import Select from "../components/Select/Select";
+import Toast from "../components/Toast/Toast";
 import Search from "../components/Search/Search";
 import Empty from "../components/Empty";
 import ErrorPlaceholder from "../components/ErrorPlaceholder";
@@ -33,12 +34,13 @@ const rotate = keyframes`
 
 const StyledFooter = styled.footer`
   background-color: ${({ theme }) => theme.footerBackgroundColor};
-  padding: 1.3rem;
+  padding: 1rem;
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   animation: ${rotate} 0.3s linear;
+  transform: translateY(1px);
 `;
 
 const StyledPaginationItem = styled.button<StyledPaginationItemProps>`
@@ -94,7 +96,7 @@ const StyledHeader = styled.div`
   background-color: ${(props) => props.theme.headerBg};
 
   @media ${device.laptop} {
-    padding: 1rem;
+    padding: 0.8rem;
     padding-left: 3rem;
     padding-right: 3rem;
   }
@@ -114,20 +116,20 @@ const StyledHeader = styled.div`
 `;
 
 const StyledLayout = styled.div`
-  flex: 1 1 0;
+  height: 100%;
   display: flex;
   flex-direction: column;
 
-  @media ${device.laptop} {
-    padding-left: 4rem;
-    padding-right: 4rem;
-    padding-top: 1rem;
-  }
-
   .main-area {
     flex: 1 1 0;
-    padding-bottom: 2rem;
     width: 100%;
+    overflow: scroll;
+
+    @media ${device.laptop} {
+      padding-left: 4rem;
+      padding-right: 4rem;
+    }
+
     .main-area__inner {
       padding: 1rem;
       width: 100%;
@@ -135,7 +137,6 @@ const StyledLayout = styled.div`
       gap: 1rem;
       display: grid;
       grid-template-columns: repeat(2, minmax(100px, 1fr));
-
       grid-auto-flow: row;
 
       @media ${device.mobileM} {
@@ -208,7 +209,7 @@ function ResultsPage() {
         }
       } catch (e) {
         setLoading(false);
-        setError(e.response.data.message);
+        setError(e.message);
       }
     },
     [sortType]
@@ -258,7 +259,7 @@ function ResultsPage() {
         }
       } catch (e) {
         setLoading(false);
-        setError(e.response.data.message);
+        setError(e.message);
       }
     },
     [sortType, history]
@@ -301,7 +302,7 @@ function ResultsPage() {
   //==================================
 
   return (
-    <>
+    <StyledLayout>
       <StyledHeader>
         <Link className="mr" to="/">
           <Logo />
@@ -315,53 +316,51 @@ function ResultsPage() {
           <ToggleMode isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
         </div>
       </StyledHeader>
-      <StyledLayout>
-        <main className="main-area">
-          {result.items.length > 0 && (
-            <>
-              <StyledHeaderArea>
-                <div className="left">
-                  <File />
-                  {formatNumber(result.total_count)}{" "}
-                  {`Result${result.total_count > 1 && "s"}`} found
-                </div>
-                <div>
-                  <Select
-                    placeholder={sortTypes.followers}
-                    items={[
-                      sortTypes.followers,
-                      sortTypes.repositories,
-                      sortTypes.joined,
-                    ]}
-                    onChange={(sortType) => {
-                      setSortType(sortType);
-                    }}
-                  />
-                </div>
-              </StyledHeaderArea>
-              <div className="main-area__inner" data-testid="user-list">
-                <Users items={result.items} />
+      <main className="main-area">
+        {result.items.length > 0 && (
+          <>
+            <StyledHeaderArea>
+              <div className="left">
+                <File />
+                {formatNumber(result.total_count)}{" "}
+                {`Result${result.total_count > 1 && "s"}`} found
               </div>
-            </>
-          )}
+              <div>
+                <Select
+                  placeholder={sortTypes.followers}
+                  items={[
+                    sortTypes.followers,
+                    sortTypes.repositories,
+                    sortTypes.joined,
+                  ]}
+                  onChange={(sortType) => {
+                    setSortType(sortType);
+                  }}
+                />
+              </div>
+            </StyledHeaderArea>
+            <div className="main-area__inner" data-testid="user-list">
+              <Users items={result.items} />
+            </div>
+          </>
+        )}
 
-          {result.items.length === 0 && !loading && !error && (
-            <Empty
-              title="I can't find anything"
-              subTitle={`no result found ${lastSearchTerm.current && "for “"}${
-                lastSearchTerm.current
-              }${lastSearchTerm.current && "”"}`}
-            />
-          )}
+        {result.items.length === 0 && !loading && !error && (
+          <Empty
+            title="I can't find anything"
+            subTitle={`no result found ${lastSearchTerm.current && "for “"}${
+              lastSearchTerm.current
+            }${lastSearchTerm.current && "”"}`}
+          />
+        )}
 
-          {error && result.items.length === 0 && (
-            <ErrorPlaceholder
-              title="An Error Occured"
-              subTitle={`Please run your search again`}
-            />
-          )}
-        </main>
-      </StyledLayout>
+        {error && result.items.length === 0 && (
+          <ErrorPlaceholder
+            title={error}
+            subTitle={`Please run your search again`}
+          />
+        )}
+      </main>
       {result.items.length > 0 && (
         <StyledFooter>
           <StyledPaginationItem
@@ -395,7 +394,7 @@ function ResultsPage() {
           </StyledPaginationItem>
         </StyledFooter>
       )}
-    </>
+    </StyledLayout>
   );
 }
 

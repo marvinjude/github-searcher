@@ -3,12 +3,16 @@ import CircularSpinner from "../Spinners/CircularSpinner";
 import styled from "styled-components";
 import { device } from "../../themes";
 
+
 interface Props {
   loading?: boolean;
   disabled?: boolean;
   primary?: boolean;
   small?: boolean;
   rounded?: boolean;
+
+  as?: React.ElementType
+  to?: string
 }
 
 interface StyledButtonProps {

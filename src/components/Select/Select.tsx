@@ -12,14 +12,14 @@ const SelectWrapper = styled.div<SelectWrapperProps>`
   display: flex;
   position: relative;
   align-items: center;
- 
+  user-select: none;
 
-  .input {
+  .inner {
     ${(props) => props.theme.focusStyle}
     padding: 1rem;
     border-radius: 5px;
     height: 40px;
-    border:  ${({ theme }) => `1px solid ${theme.borderColor}`};
+    border: ${({ theme }) => `1px solid ${theme.borderColor}`};
     color: ${(props) => props.theme.foregroundColor};
     width: 100%;
     line-height: 50%;
@@ -27,7 +27,7 @@ const SelectWrapper = styled.div<SelectWrapperProps>`
     cursor: pointer;
     display: flex;
     justify-content: space-between;
-    align-items:center;
+    align-items: center;
 
     ::placeholder {
       color: #787c8e;
@@ -41,7 +41,7 @@ const SelectWrapper = styled.div<SelectWrapperProps>`
     top: 110%;
     background-color: ${(props) => props.theme.backgroundColor};
     border-radius: 5px;
-    border:  ${({ theme }) => `1px solid ${theme.borderColor}`};
+    border: ${({ theme }) => `1px solid ${theme.borderColor}`};
     font-size: 14px;
     z-index: 30;
     min-height: 100px;
@@ -50,13 +50,15 @@ const SelectWrapper = styled.div<SelectWrapperProps>`
   }
 
   .select__item {
+    width: 100%;
+    text-align: left;
     color: ${(props) => props.theme.foregroundColor};
     padding: 0.5rem;
     border-radius: 8px;
     cursor: pointer;
 
     &:hover {
-      background-color:${({ theme }) => theme.borderColor};
+      background-color: ${({ theme }) => theme.borderColor};
     }
   }
 `;
@@ -81,11 +83,11 @@ function Select({ items, onChange, placeholder, ...delegated }: SelectProps) {
   };
 
   return (
-    <SelectWrapper {...delegated} opened={open} ref={ref as any}>
-      <div className="input" onClick={() => setOpen((o) => !o)}>
+    <SelectWrapper tabIndex={-1} {...delegated} opened={open} ref={ref as any}>
+      <button className="inner" onClick={() => setOpen((o) => !o)}>
         {value || placeholder}
         <svg
-          focusable='false'
+          focusable="false"
           width="6"
           height="4"
           tabIndex={-1}
@@ -108,9 +110,7 @@ function Select({ items, onChange, placeholder, ...delegated }: SelectProps) {
             transform="translate(-132 -389)"
           />
         </svg>
-      </div>
-
-
+      </button>
 
       <AnimatePresence>
         {open && (
@@ -122,9 +122,13 @@ function Select({ items, onChange, placeholder, ...delegated }: SelectProps) {
             exit={{ opacity: 0, y: -20, scaleY: 0.7 }}
           >
             {items.map((item: any) => (
-              <div key={item} onClick={() => onSelect(item)} className="select__item">
+              <button
+                key={item}
+                onClick={() => onSelect(item)}
+                className="select__item"
+              >
                 {item}
-              </div>
+              </button>
             ))}
           </motion.div>
         )}

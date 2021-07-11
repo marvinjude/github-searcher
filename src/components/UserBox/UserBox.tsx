@@ -8,30 +8,32 @@ interface Props {
 }
 
 const Wrapper = styled.a`
-  display: flex;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border: ${({ theme }) => `1px solid ${theme.borderColor}`};
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   position: relative;
   margin-bottom: 0.5rem;
-  min-height: 160px;
-  width: auto;
-
   transition: 0.3s all ease;
   text-decoration: none;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  min-height: 160px;
+  min-width: 100px;
+  display: flex;
+
+  .user-box__avatar {
+    width: 100%;
+    flex: 1 1 0;
+  }
 
   &:hover {
     transform: translateY(0.2rem);
   }
 
-  .user-box__avatar {
-    border-radius: 0.5rem;
-    background-color: #1f0735;
-    width: 100%;
-  }
-
   .user-box__login {
-    margin-top: 0.5rem;
+    font-size: 0.93rem;
+    padding: 0.5rem;
     text-transform: capitalize;
     color: ${({ theme }) => theme.foregroundColor} !important;
   }
@@ -44,7 +46,6 @@ const Wrapper = styled.a`
     border-radius: 50%;
     bottom: 40px;
     right: 10px;
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -54,7 +55,7 @@ const Wrapper = styled.a`
 const UserBox: FC<Props> = ({ avatar_url, login, type, ...props }) => {
   return (
     <Wrapper target="_blank" href={`https://github.com/${login}`} {...props}>
-      <img className="user-box__avatar" alt={login} src={avatar_url} />
+      <img className="user-box__avatar" alt={login} src={avatar_url} /> 
       <span className="user-box__login">{login}</span>
       <div className="user-box__user-type">
         {type === "User" && (

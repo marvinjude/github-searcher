@@ -255,6 +255,6 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   *:focus-visible {
-    box-shadow: 0 0 0 3px rgba(128, 93, 249, 0.3);
+    box-shadow: 0 0 0 3px rgba(128, 93, 249, 0.3) !important;
   }
 `;
