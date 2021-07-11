@@ -6,7 +6,6 @@ import ToggleMode from "../components/ToggleMode/ToggleMode";
 import Users, { UserType } from "../components/Users";
 import Logo from "../components/Logo";
 import Select from "../components/Select/Select";
-import Toast from "../components/Toast/Toast";
 import Search from "../components/Search/Search";
 import Empty from "../components/Empty";
 import ErrorPlaceholder from "../components/ErrorPlaceholder";
