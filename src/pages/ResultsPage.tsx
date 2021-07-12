@@ -13,11 +13,16 @@ import ErrorPlaceholder from "../components/ErrorPlaceholder";
 import useDidUpdateEffect from "../hooks/useDidUpdateEffect";
 
 import { useAppContext } from "../App";
+import { useToastContext } from "../components/Toast/Toast";
+
 import { paginationListGenerator, formatNumber, dataSorter } from "../utils";
 import File from "../Icons/File";
 import api from "../service/api";
 import { device } from "../themes";
 import { PER_PAGE } from "../constants";
+
+
+
 
 /** Styles
  * ================================== */
@@ -118,6 +123,7 @@ const StyledLayout = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow:hidden;
 
   .main-area {
     flex: 1 1 0;
@@ -185,6 +191,8 @@ function ResultsPage() {
   const [sortType, setSortType] = useState<sortTypes>(sortTypes.followers);
 
   const { isDarkMode, setIsDarkMode } = useAppContext();
+  const { addToast } = useToastContext();
+
   const history = useHistory();
 
   const fetchPage = useCallback(
@@ -209,9 +217,12 @@ function ResultsPage() {
       } catch (e) {
         setLoading(false);
         setError(e.message);
+        if (result.items.length > 1) {
+          addToast && addToast(e.message);
+        }
       }
     },
-    [sortType]
+    [sortType, addToast, result.items.length]
   );
 
   const onKeyUp = useCallback(
@@ -259,9 +270,12 @@ function ResultsPage() {
       } catch (e) {
         setLoading(false);
         setError(e.message);
+        if (result.items.length > 1) {
+          addToast && addToast(e.message);
+        }
       }
     },
-    [sortType, history]
+    [sortType, history, addToast, result.items.length]
   );
 
   /** Effects
@@ -280,6 +294,7 @@ function ResultsPage() {
 
   //Fetch on new render
   useEffect(() => {
+
     let mounted = true;
     const searhTermsFromURL =
       new URLSearchParams(history.location.search).get("q") || "";
@@ -347,9 +362,8 @@ function ResultsPage() {
         {result.items.length === 0 && !loading && !error && (
           <Empty
             title="I can't find anything"
-            subTitle={`no result found ${lastSearchTerm.current && "for “"}${
-              lastSearchTerm.current
-            }${lastSearchTerm.current && "”"}`}
+            subTitle={`no result found ${lastSearchTerm.current && "for “"}${lastSearchTerm.current
+              }${lastSearchTerm.current && "”"}`}
           />
         )}
 
@@ -365,13 +379,14 @@ function ResultsPage() {
           <StyledPaginationItem
             selected={false}
             onClick={() => fetchPage(Math.max(1, currentPage - 1))}
-            disabled={currentPage === 1}
+            disabled={currentPage === 1 || loading}
           >
             {"<<"}
           </StyledPaginationItem>
           {paginationListGenerator(currentPage, result.total_count).map(
             (pageNumber) => (
               <StyledPaginationItem
+                disabled={loading}
                 key={pageNumber}
                 selected={currentPage === pageNumber}
                 onClick={() => fetchPage(pageNumber)}
@@ -387,7 +402,7 @@ function ResultsPage() {
                 (currentPage + 1) % Math.ceil(result.total_count / PER_PAGE)
               )
             }
-            disabled={currentPage === Math.ceil(result.total_count / PER_PAGE)}
+            disabled={currentPage === Math.ceil(result.total_count / PER_PAGE) || loading}
           >
             {">>"}
           </StyledPaginationItem>

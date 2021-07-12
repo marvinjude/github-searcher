@@ -8,7 +8,8 @@ import Home from './pages/Home';
 import { themes } from "./themes";
 import { GlobalStyles } from './GlobalsStyles';
 import useLocalStorage from './hooks/useLocalStorage';
-
+import { ToastContainer } from './components/Toast/ToastContainer';
+import { ToastProvider } from './components/Toast/ToastProvider';
 
 type AppContextVales = {
   isDarkMode?: string;
@@ -33,6 +34,7 @@ const AppWrapper = styled.div`
 function App() {
   const [isDarkMode, setIsDarkMode] = useLocalStorage("isDarkMode", true);
 
+  //This effect Corrects Viewport height on Safari
   useEffect(() => {
     const appHeight = () => {
       const innerHeight = window.innerHeight;
@@ -56,13 +58,16 @@ function App() {
         setIsDarkMode
       }}>
       <ThemeProvider theme={isDarkMode ? themes.dark : themes.light}>
-        <AppWrapper>
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route path="/result" component={ResultsPage}></Route>
-          </Switch>
-        </AppWrapper>
-        <GlobalStyles />
+        <ToastProvider>
+          <AppWrapper>
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route path="/result" component={ResultsPage}></Route>
+            </Switch>
+          </AppWrapper>
+          <ToastContainer />
+          <GlobalStyles />
+        </ToastProvider>
       </ThemeProvider>
     </AppContext.Provider>
 

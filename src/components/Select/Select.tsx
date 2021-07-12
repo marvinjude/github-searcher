@@ -84,7 +84,12 @@ function Select({ items, onChange, placeholder, ...delegated }: SelectProps) {
 
   return (
     <SelectWrapper tabIndex={-1} {...delegated} opened={open} ref={ref as any}>
-      <button className="inner" onClick={() => setOpen((o) => !o)}>
+      <button
+        className="inner"
+        aria-label={open ? "close" : "open"}
+        aria-haspopup="true"
+        onClick={() => setOpen((o) => !o)}
+      >
         {value || placeholder}
         <svg
           focusable="false"

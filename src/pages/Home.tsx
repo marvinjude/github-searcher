@@ -70,7 +70,7 @@ function Home() {
           {suggestedSearchTerms.map(searchItem => (
             <Button
               rounded={true}
-              small
+              small={true}
               as={Link}
               key={searchItem}
               to={`/result?q=${searchItem}`}
