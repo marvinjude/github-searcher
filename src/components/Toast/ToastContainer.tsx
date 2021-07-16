@@ -34,7 +34,8 @@ export const ToastContainer = () => {
             className="toast"
             initial={{ opacity: 0.5, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0.5, scale: 0.7 }}
+            exit={{ opacity: 0.8, scale: 0.7, y: 20 }}
+            transition={{ duration: 0.2 }}
           >
             {message.value}
           </motion.div>

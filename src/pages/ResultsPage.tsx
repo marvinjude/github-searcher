@@ -172,6 +172,7 @@ interface StyledPaginationItemProps {
   selected: boolean;
 }
 
+
 interface resultProps {
   items: UserType[];
   total_count: number;
@@ -197,8 +198,6 @@ function ResultsPage() {
 
   const fetchPage = useCallback(
     async (page: number) => {
-      setCurrentPage(page);
-
       try {
         const { data } = await api.fetchUsers({
           sort: sortType,
@@ -212,13 +211,14 @@ function ResultsPage() {
           throw new Error(data.message);
         } else {
           setError("");
+          setCurrentPage(page);
           setResult(dataSorter(data));
         }
       } catch (e) {
         setLoading(false);
         setError(e.message);
         if (result.items.length > 1) {
-          addToast && addToast(e.message);
+          addToast && addToast(`${e.message}, Please try again`);
         }
       }
     },
@@ -397,12 +397,12 @@ function ResultsPage() {
           )}
           <StyledPaginationItem
             selected={false}
+            disabled={currentPage === Math.ceil(result.total_count / PER_PAGE) || loading}
             onClick={() =>
               fetchPage(
                 (currentPage + 1) % Math.ceil(result.total_count / PER_PAGE)
               )
             }
-            disabled={currentPage === Math.ceil(result.total_count / PER_PAGE) || loading}
           >
             {">>"}
           </StyledPaginationItem>

@@ -3,16 +3,17 @@ import CircularSpinner from "../Spinners/CircularSpinner";
 import styled from "styled-components";
 import { device } from "../../themes";
 
-
 interface Props {
+  /*what the fuck is this comment*/
   loading?: boolean;
+  
   disabled?: boolean;
   primary?: boolean;
   small?: boolean;
   rounded?: boolean;
 
-  as?: React.ElementType
-  to?: string
+  as?: React.ElementType;
+  to?: string;
 }
 
 interface StyledButtonProps {
@@ -32,6 +33,10 @@ const IconButtonWrapper = styled.button`
   font-size: 12px;
   font-weight: 600;
   padding: 0.5rem;
+
+  &:hover {
+    background-color: #80808026 !important;
+  }
 `;
 
 const StyledButton = styled.button<StyledButtonProps>`
@@ -45,6 +50,15 @@ const StyledButton = styled.button<StyledButtonProps>`
   text-decoration: none !important;
   min-width: ${({ small }) => (small ? "5rem" : "7rem")};
 
+  border-radius: ${({ rounded }) => (rounded ? "0.22rem" : "0")};
+  background-color: ${({ primary, theme }) =>
+    primary ? theme.primary : "transparent"};
+  border: ${({ primary, theme }) =>
+    primary ? "transparent" : `1px solid  ${theme.primary}`};
+
+  height: ${({ small }) => (small ? "2.6rem" : "2.8rem")};
+  color: ${(props) => (props.primary ? "white" : props.theme.foregroundColor)};
+
   svg {
     margin-right: 0.2rem;
   }
@@ -54,38 +68,27 @@ const StyledButton = styled.button<StyledButtonProps>`
     color: ${({ theme }) => theme.primaryForegroundColor};
   }
 
-  @media ${device.laptop}{
+  @media ${device.laptop} {
     min-width: ${({ small }) => (small ? "7rem" : "11rem")};
     padding-left: 3rem;
     padding-right: 3rem;
   }
-
-
-  border-radius: ${({ rounded }) => (rounded ? "0.22rem" : "0")};;
-  background-color: ${({ primary, theme }) => (primary ? theme.primary : "transparent")};
-  border: ${({ primary, theme }) => (primary ? "transparent" : `1px solid  ${theme.primary}`)};
-
-  height: ${({ small }) => (small ? "2.6rem" : "2.8rem")};
-  color: ${(props) => props.primary ? 'white' : props.theme.foregroundColor};
 `;
 
 const Button: FC<Props> = ({ children, loading, ...props }) => {
   return (
-    <StyledButton role='button' {...props}>
+    <StyledButton role="button" {...props}>
       {loading ? <CircularSpinner /> : children}
     </StyledButton>
   );
 };
 
-
 export const IconButton: FC = ({ children, ...props }) => {
   return (
-    <IconButtonWrapper role='button' {...props}>
+    <IconButtonWrapper role="button" {...props}>
       {children}
     </IconButtonWrapper>
   );
 };
-
-
 
 export default Button;

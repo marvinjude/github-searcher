@@ -1,5 +1,8 @@
 export type MessageType = {
+  /*The very first comment*/
   id: number;
+
+  /*The very second comment*/
   value: string;
 };
 

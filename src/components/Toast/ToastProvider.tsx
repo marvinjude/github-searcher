@@ -23,7 +23,7 @@ export const ToastProvider: FC = ({ children }) => {
       setMessages((messages) =>
         messages.filter((message) => message.id !== id)
       );
-    }, 4000);
+    }, 5000);
   }, []);
 
   return (
