@@ -82,6 +82,10 @@ function Select({ items, onChange, placeholder, ...delegated }: SelectProps) {
     onChange(item);
   };
 
+  const handleBlur = (index: number) => {
+    if (index === items.length - 1) setOpen(false);
+  };
+
   return (
     <SelectWrapper tabIndex={-1} {...delegated} opened={open} ref={ref as any}>
       <button
@@ -126,11 +130,12 @@ function Select({ items, onChange, placeholder, ...delegated }: SelectProps) {
             animate={{ opacity: 1, y: 0, scaleY: 1 }}
             exit={{ opacity: 0, y: -20, scaleY: 0.7 }}
           >
-            {items.map((item: any) => (
+            {items.map((item: any, index) => (
               <button
                 key={item}
                 onClick={() => onSelect(item)}
                 className="select__item"
+                onBlur={() => handleBlur(index)}
               >
                 {item}
               </button>
