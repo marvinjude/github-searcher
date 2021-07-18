@@ -6,7 +6,7 @@ import { device } from "../../themes";
 interface Props {
   /*what the fuck is this comment*/
   loading?: boolean;
-  
+
   disabled?: boolean;
   primary?: boolean;
   small?: boolean;
@@ -51,7 +51,7 @@ const StyledButton = styled.button<StyledButtonProps>`
   min-width: ${({ small }) => (small ? "5rem" : "7rem")};
 
   border-radius: ${({ rounded }) => (rounded ? "0.22rem" : "0")};
-  background-color: ${({ primary, theme }) =>
+  background: ${({ primary, theme }) =>
     primary ? theme.primary : "transparent"};
   border: ${({ primary, theme }) =>
     primary ? "transparent" : `1px solid  ${theme.primary}`};
@@ -64,7 +64,7 @@ const StyledButton = styled.button<StyledButtonProps>`
   }
 
   &:hover {
-    background-color: ${({ theme }) => theme.primary};
+    background: ${({ theme }) => theme.primary};
     color: ${({ theme }) => theme.primaryForegroundColor};
   }
 

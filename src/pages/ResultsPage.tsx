@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef, memo } from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import { Link, useHistory } from "react-router-dom";
 
 import ToggleMode from "../components/ToggleMode/ToggleMode";
@@ -20,9 +20,6 @@ import File from "../Icons/File";
 import api from "../service/api";
 import { device } from "../themes";
 import { PER_PAGE } from "../constants";
-
-
-
 
 /** Styles
  * ================================== */
@@ -55,11 +52,36 @@ const StyledPaginationItem = styled.button<StyledPaginationItemProps>`
   margin-right: 0.5rem;
   border-radius: 50%;
   color: white;
-  background-color: ${({ selected, theme }) =>
+  background: ${({ selected, theme }) =>
     selected ? theme.primary : `transparent`};
   font-weight: ${({ selected }) => (selected ? "500" : `normal`)};
-  border: 1px solid #892cdc;
+
   transition: 0.2s all;
+  position: relative;
+
+  ${(props) =>
+    (props.loading &&
+      css`
+        &::before {
+          position: absolute;
+          content: "";
+          height: 2.8rem;
+          width: 2.8rem;
+          left: 0;
+          top: 0;
+          border-radius: 999px;
+          overflow: hidden;
+          border: 2px solid #892cdc;
+          border-bottom: 2px solid transparent;
+          animation-name: rotate;
+          animation-duration: 0.7s;
+          animation-iteration-count: infinite;
+          animation-timing-function: linear;
+        }
+      `) ||
+    css`
+      border: 1px solid #892cdc;
+    `}
 
   &:hover {
     background: #892cdc;
@@ -123,7 +145,7 @@ const StyledLayout = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  overflow:hidden;
+  overflow: hidden;
 
   .main-area {
     flex: 1 1 0;
@@ -170,8 +192,8 @@ enum sortTypes {
 
 interface StyledPaginationItemProps {
   selected: boolean;
+  loading?: boolean;
 }
-
 
 interface resultProps {
   items: UserType[];
@@ -190,6 +212,9 @@ function ResultsPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
   const [sortType, setSortType] = useState<sortTypes>(sortTypes.followers);
+  const [pageNumberLoading, setPageNumberLoading] = useState<null | number>(
+    null
+  );
 
   const { isDarkMode, setIsDarkMode } = useAppContext();
   const { addToast } = useToastContext();
@@ -198,6 +223,9 @@ function ResultsPage() {
 
   const fetchPage = useCallback(
     async (page: number) => {
+      setLoading(true);
+      setPageNumberLoading(page);
+
       try {
         const { data } = await api.fetchUsers({
           sort: sortType,
@@ -206,6 +234,7 @@ function ResultsPage() {
         });
 
         setLoading(false);
+        setPageNumberLoading(null);
 
         if (data.message) {
           throw new Error(data.message);
@@ -216,6 +245,7 @@ function ResultsPage() {
         }
       } catch (e) {
         setLoading(false);
+        setPageNumberLoading(null);
         setError(e.message);
         if (result.items.length > 1) {
           addToast && addToast(`${e.message}, Please try again`);
@@ -281,6 +311,7 @@ function ResultsPage() {
   /** Effects
    * ================================== */
 
+  //handle navigation with array keys
   useEffect(() => {
     window.addEventListener("keyup", onKeyUp);
 
@@ -294,7 +325,6 @@ function ResultsPage() {
 
   //Fetch on new render
   useEffect(() => {
-
     let mounted = true;
     const searhTermsFromURL =
       new URLSearchParams(history.location.search).get("q") || "";
@@ -362,8 +392,9 @@ function ResultsPage() {
         {result.items.length === 0 && !loading && !error && (
           <Empty
             title="I can't find anything"
-            subTitle={`no result found ${lastSearchTerm.current && "for “"}${lastSearchTerm.current
-              }${lastSearchTerm.current && "”"}`}
+            subTitle={`no result found ${lastSearchTerm.current && "for “"}${
+              lastSearchTerm.current
+            }${lastSearchTerm.current && "”"}`}
           />
         )}
 
@@ -386,6 +417,7 @@ function ResultsPage() {
           {paginationListGenerator(currentPage, result.total_count).map(
             (pageNumber) => (
               <StyledPaginationItem
+                loading={pageNumberLoading === pageNumber}
                 disabled={loading}
                 key={pageNumber}
                 selected={currentPage === pageNumber}
@@ -397,7 +429,10 @@ function ResultsPage() {
           )}
           <StyledPaginationItem
             selected={false}
-            disabled={currentPage === Math.ceil(result.total_count / PER_PAGE) || loading}
+            disabled={
+              currentPage === Math.ceil(result.total_count / PER_PAGE) ||
+              loading
+            }
             onClick={() =>
               fetchPage(
                 (currentPage + 1) % Math.ceil(result.total_count / PER_PAGE)

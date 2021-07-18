@@ -1,6 +1,6 @@
 export const themes = {
   dark: {
-    primary: "#892cdc;",
+    primary: "linear-gradient(287deg, rgb(186, 59, 149), #892cdc);",
     primaryForegroundColor: "#ffffff",
     foregroundColor: "white",
     backgroundColor: "#000000",
