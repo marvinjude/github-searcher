@@ -1,11 +1,13 @@
 # Github Searcher
 
-A Simple React(w. Hooks) app for seaching Github users with the Github API
+A Simple React app for seaching Github users with the Github API
+
+![Alt text](./github/app-screenshot.png)
 
 ## Demo
 
 This project is hosted on Netlify -
-https://scalio-github-searcher.netlify.app/
+https://github-searcher-by-marvinjude.netlify.app
 
 ## Installation
 
@@ -28,8 +30,6 @@ $ yarn test
 ```
 
 ## Build
-
-Compile and build
 
 ```sh
 $ yarn build
