@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { device } from "../../themes";
 
 interface Props {
-  /*what the fuck is this comment*/
   loading?: boolean;
 
   disabled?: boolean;
