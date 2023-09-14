@@ -64,22 +64,6 @@ function Home() {
         <h1>Search Across Github</h1>
         <Search onSubmit={(value) => handleClick(value)} loading={false} />
       </div>
-      <div className="footer">
-        <div className='label'>Suggested search:</div>
-        <div className="button-list">
-          {suggestedSearchTerms.map(searchItem => (
-            <Button
-              rounded={true}
-              small={true}
-              as={Link}
-              key={searchItem}
-              to={`/result?q=${searchItem}`}
-            >
-              {searchItem}
-            </Button>
-          ))}
-        </div>
-      </div>
     </Wrapper>
   );
 }
